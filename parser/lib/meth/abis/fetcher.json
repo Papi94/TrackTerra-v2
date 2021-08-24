@@ -1,0 +1,159 @@
+[
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_factory",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_ust",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_mir",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "inputs": [],
+    "name": "factory",
+    "outputs": [
+      {
+        "internalType": "contract IUniswapV2Factory",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address[]",
+        "name": "targets",
+        "type": "address[]"
+      }
+    ],
+    "name": "fetchPairInfo",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "lpToken",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "lpSupply",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "ust",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "ustReserve",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "asset",
+            "type": "address"
+          },
+          {
+            "internalType": "string",
+            "name": "assetSymbol",
+            "type": "string"
+          },
+          {
+            "internalType": "uint256",
+            "name": "assetReserve",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "assetPrice",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct InfoFetcher.PairInfo[]",
+        "name": "pairInfos",
+        "type": "tuple[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address[]",
+        "name": "targets",
+        "type": "address[]"
+      }
+    ],
+    "name": "fetchPoolInfo",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "lpToken",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "lpStaked",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "rewardRemains",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct InfoFetcher.PoolInfo[]",
+        "name": "poolInfos",
+        "type": "tuple[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "mir",
+    "outputs": [
+      {
+        "internalType": "contract IERC20",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "ust",
+    "outputs": [
+      {
+        "internalType": "contract IERC20",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  }
+]

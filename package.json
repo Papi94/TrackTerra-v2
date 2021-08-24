@@ -1,0 +1,23 @@
+{
+  "name": "trackterra-v2",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "fs": "0.0.1-security",
+    "graphql": "^15.5.1",
+    "graphql-request": "^3.5.0",
+    "pg": "^8.6.0",
+    "pg-hstore": "^2.3.4",
+    "phin": "^3.6.0",
+    "sequelize": "^6.6.5",
+    "sqlite3": "^5.0.2"
+  }
+}

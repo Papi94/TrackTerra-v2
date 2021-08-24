@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>TrackTerra 2.0</title>
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/Navigation-Clean.css">
+    <link rel="stylesheet" href="assets/css/Newsletter-Subscription-Form.css">
+    <link rel="stylesheet" href="assets/css/styles.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs5/jq-3.3.1/jszip-2.5.0/dt-1.10.25/b-1.7.1/b-html5-1.7.1/cr-1.5.4/r-2.2.9/sb-1.1.0/sp-1.3.0/datatables.min.css"/>
+ 
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs5/jq-3.3.1/jszip-2.5.0/dt-1.10.25/b-1.7.1/b-html5-1.7.1/cr-1.5.4/r-2.2.9/sb-1.1.0/sp-1.3.0/datatables.min.js"></script>
+
+
+</head>
+
+<body>
+    <nav class="navbar navbar-light navbar-expand-md navigation-clean" style="border-style: solid;">
+        <div class="container"><a class="navbar-brand" href="#">Track Terra 2.0</a> <img src="data:image/png;base64, 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" alt="logo" />
+		<button data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navcol-1"><span class="visually-hidden">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navcol-1">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="#"><b>Home</b></a></li>
+                    <li class="nav-item"><a class="nav-link" href="https://twitter.com/trackterraorg"><b>Twitter</b></a></li>
+                    <li class="nav-item"><a class="nav-link" href="https://t.me/trackterraorg"><b>Telegram</b></a></li>
+
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <section class="newsletter-subscribe">
+                    <div class="container">
+						<div class="alert alert-danger" role="alert">
+							Track Terra 2.0 is in ALPHA, this should be considered a pre-release. There are a few known shortfalls . Mirror and Anchor liquidations are not recorded. Mirror limit orders are probably not being tracked accurately. When you close a CDP if you receive more than two tokens only 1 is tracked. No logic for native staking rewards has been implemented . Spec transactions are missing classifiers. There's also a few things we plan to clean up in regards to token/contract adddresses displayed. Please report any issues that arnt listed here. 
+							<br><br>
+							Our efforts are currently focused on resolving issues with the public FCD infrastructure. The public FCD infrastructure has issues where it doesnt return some transactions for some wallets.  This results in wildly inaccurate tax reports for affected wallets. Once this is addressed we will be able to prioritize other features/bugs.   
+						  </div>
+                        <div class="intro">
+                            <h2 class="text-center">Enter your address below to begin</h2>
+                        </div>
+                        <form class="d-flex justify-content-center flex-wrap" onsubmit="return false;">
+                            <div class="mb-3"><input class="form-control" type="text" name="address" id="address" placeholder="Your Terra Address"></div>
+                            <div class="mb-3"><button class="btn btn-primary" onclick="getReport()">Parse Wallet</button></div>						
+                        </form>
+						<div>
+							<div align="center">
+								<div class="form-check form-check-inline">
+								  <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="tax_report" checked="checked">
+								  <label class="form-check-label" for="inlineRadio2">Tax Report</label>
+								</div>
+								<div class="form-check form-check-inline">
+								  <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio3" value="all_report">
+								  <label class="form-check-label" for="inlineRadio3">All Data Report</label>
+								</div>
+							</div>
+						</div>
+                    </div>
+                </section>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                       <span >  <h5 class="mb-0" id="tableheader">Transaction Table</h5></span>
+                    </div>
+                    <div class="card-body">
+                        <table id="koinly_report" class="display" style="width:100%">
+							<thead></thead>
+						</table>
+					
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+
+</body>
+	<script>
+
+
+	function httpGet(theUrl){
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.open( "GET", theUrl, false ); // false for synchronous request
+    xmlHttp.send( null );
+    return xmlHttp.responseText;
+	}
+
+	function getReport(){
+		var radios = document.querySelectorAll('input[type="radio"]:checked');
+		var radioSelectionValue = radios.length>0? radios[0].value: null;
+		var walletAddress = document.getElementById("address").value;
+
+		if (radioSelectionValue  == "tax_report"){
+			parseWalletTaxReport(walletAddress)
+
+		}else if (radioSelectionValue  == "all_report"){
+			parseWalletAllDataReport(walletAddress)
+		}
+
+	}
+
+	async function parseWalletAllDataReport(walletAddress){
+		var baseUrl = "http://localhost:8081/"
+		var walletAddress = document.getElementById("address").value;
+		var submitUrl = baseUrl +"parseWallet?address="+ walletAddress
+		var statusUrl = baseUrl +"parseStatus?address="+ walletAddress
+		var statusStringUrl = baseUrl +"parseStatusString?address="+ walletAddress
+		var koinlyReportUrl = baseUrl +"getAllDataReport?address="+ walletAddress
+		var response = httpGet(submitUrl)
+
+		//document.getElementById("myspan").textContent=response;
+		
+			while (response == "processing"){
+				document.getElementById('tableheader').innerHTML="Processing wallet " + walletAddress + " please wait..."
+				response = httpGet(statusUrl)
+				await sleep(2000)
+			}
+
+			if ($.fn.DataTable.isDataTable('#koinly_report')) {
+				var koinlyTable = $('#koinly_report').DataTable();
+				koinlyTable.destroy();
+    		}
+			
+			
+			document.getElementById('tableheader').innerHTML="Processing complete "
+			$('#koinly_report').DataTable( {
+				
+			"scrollX": true,
+			colReorder: true,
+			dom: 'Bfrtip',
+			buttons: [
+				'copy', 'csv', 'excel', 'pdf'
+			],
+			"ajax":  {
+			"url" : koinlyReportUrl,
+			"dataSrc": ""
+			},    
+		columns: [ 
+			{ title: 'Date',data : "transaction_timestamp_string" },
+			{ title: 'Sent Amount', data : "amount_sent" },
+			{ title: 'Sent Currency' ,data : "sent_currency" },
+			{ title: 'Sent Token Address',data : "token_sent_address" },
+			{ title: 'Received Amount',data : "amount_received" },
+			{title: 'Received Currency' , data : "received_currency" },     
+			{ title: 'Received Token Address',data : "token_received_address" },   
+			{ title: 'Fee Amount',data : "fee_amount" },        
+			{ title: 'Fee Currency' ,data : "fee_currency" },
+			{ title: 'Net Worth Amount' ,data : "net_worth_amount" },
+			{title: 'Net Worth Currency', data : "net_worth_currency" },
+			{ title: 'Contract Address' ,data : "contract_address" },
+			{ title: 'Memo' ,data : "memo" },
+			{  title: 'Tx Type',data : "transaction_type" },
+			{ title: 'Description' ,data : "friendly_description" },
+			{ title: 'TxHash',data : "txhash" },
+			{ title: 'Block Height',data : "block_height" }
+	]   
+		} );
+			await sleep(1000)
+			document.getElementById('tableheader').innerHTML="Transaction Table"
+
+	}
+	
+
+	async function parseWalletTaxReport(walletAddress){
+		var baseUrl = "http://localhost:8081/"
+		var walletAddress = document.getElementById("address").value;
+		var submitUrl = baseUrl +"parseWallet?address="+ walletAddress
+		var statusUrl = baseUrl +"parseStatus?address="+ walletAddress
+		var statusStringUrl = baseUrl +"parseStatusString?address="+ walletAddress
+		var koinlyReportUrl = baseUrl +"getTaxReport?address="+ walletAddress
+		var response = httpGet(submitUrl)
+
+		//document.getElementById("myspan").textContent=response;
+		
+			while (response == "processing"){
+				document.getElementById('tableheader').innerHTML="Processing wallet " + walletAddress + " please wait..."
+				response = httpGet(statusUrl)
+				await sleep(2000)
+			}
+			
+			if ($.fn.DataTable.isDataTable('#koinly_report')) {
+				var koinlyTable = $('#koinly_report').DataTable();
+				koinlyTable.destroy();
+    		}
+			
+			document.getElementById('tableheader').innerHTML="Processing complete "
+			$('#koinly_report').DataTable( {
+
+			"scrollX": true,
+			responsive: true,
+			colReorder: true,
+			dom: 'Bfrtip',
+			buttons: [
+				'copy', 'csv', 'excel', 'pdf'
+			],
+			"ajax":  {
+			"url" : koinlyReportUrl,
+			"dataSrc": ""
+			},    
+	columns: [
+				{ title: 'Date', data : "transaction_timestamp_string" },
+				{ title: 'Sent Amount',data : "amount_sent" },
+				{ title: 'Sent Currency', data : "sent_currency" },
+				{ title: 'Received Amount',data : "amount_received" },
+				{ title: 'Received Currency',data : "received_currency"  },
+				{ title: 'Fee Amount',data : "fee_amount" },
+				{ title: 'Fee Currency', data : "fee_currency" },
+				{ title: 'Label',data : "koinly_label" },
+				{ title: 'Net Worth Amount',data : "net_worth_amount" },
+				{ title: 'Net Worth Currency',data : "net_worth_currency" },
+				{ title: 'Description',data : "friendly_description" },
+				{ title: 'TxHash',data : "txhash" }
+			],  
+		} );
+			await sleep(1000)
+			document.getElementById('tableheader').innerHTML="Transaction Table"
+
+	}
+	
+	function sleep(ms) {
+	  return new Promise(resolve => setTimeout(resolve, ms));
+	}
+	
+	
+
+
+	</script>
+</html>
+
