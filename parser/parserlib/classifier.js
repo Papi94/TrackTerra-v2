@@ -71,11 +71,6 @@ export async function getTxType(txData,lcd){
     var parsedData = parseContractActions(txData["logs"][0]["events"])
 
 
-    if (txData["txhash"] == "3BF4D86E3A92E3321E8A44751FA1837304C8BD448ADBDF530ED0E509619052CF"){
-        console.log(parseContractActions(txData["logs"][0]["events"]))
-    }
-
-
     if (isAnchorAustMint(txData)){
         txType = "anchorMint"
         return txType

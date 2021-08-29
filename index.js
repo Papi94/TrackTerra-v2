@@ -84,8 +84,6 @@ Begin Web APP
 
 */
 
-//console.log (await classifyAndParseTransactionByTxHash("3BF4D86E3A92E3321E8A44751FA1837304C8BD448ADBDF530ED0E509619052CF","terra1m3jg6rdylqnpwtuv6hs034n662w57qyzen6t6s"))
-
 app.get('/parseWallet', async function (req, res) {
   var walletAddress = req.query.address
   res.set("Access-Control-Allow-Origin", "*")
