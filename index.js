@@ -84,6 +84,8 @@ Begin Web APP
 
 */
 
+//console.log (await classifyAndParseTransactionByTxHash("3BF4D86E3A92E3321E8A44751FA1837304C8BD448ADBDF530ED0E509619052CF","terra1m3jg6rdylqnpwtuv6hs034n662w57qyzen6t6s"))
+
 app.get('/parseWallet', async function (req, res) {
   var walletAddress = req.query.address
   res.set("Access-Control-Allow-Origin", "*")
@@ -327,8 +329,9 @@ async function parse_wallet(walletAddress, parseMissing = true){
               //output = await classifyandParseTransaction(txData,walletAddress)
               //Threads arnt really threads , this will hopefuly prevent conjestions in the processing queue from impacting website or api access. 
 
-                while ( parserThreadCount > 1000 ){
-                  await sleep(100)
+                if ( parserThreadCount > 20 ){
+                  await sleep(1000)
+                  parserThreadCount = parserThreadCount -1
                 }
                 try { 
                       parserThreadCount = parserThreadCount + 1

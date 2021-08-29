@@ -1,4 +1,4 @@
-import {checkTx,initLCD,getCW20Info } from './parserlib/lcd.js'
+import {checkTx,initLCD,getCW20Info, sleep } from './parserlib/lcd.js'
 
 import {parseContractActions,parseTransfer,findAttributes,parseExecuteContracts,parseContractEvents,parseNativeRewards,parseNativeDelegation } from './parserlib/events.js'
 
@@ -25,35 +25,55 @@ export async function classifyAndParseTransactionByTxHash(txHash,walletAddress){
  return await classifyandParseTransaction(txData,walletAddress)
 }
 export async function classifyandParseTransaction(txData,walletAddress){
-  var txType = await getTxType(txData,lcd)
-
-  if (txType == false){
-    //sometimes FCDs logs are corrupt? 
-    //not sure but this works sometimes. 
-    //var txData = await checkTx(txData["txhash"],60,lcd)
-    //var txType = await getTxType(txData,lcd)
-    //console.log (txhash)
-  }
   
-if (txType == false){
-  console.log (txData["txhash"])
+  if (exists (txData) ) { 
+    if (exists (txData["logs"])){
+    var parsedData = parseContractActions(txData["logs"][0]["events"])
+
+    if(typeof parsedData == 'undefined'){
+      if (exists(txData)){ 
+        var fcdTxData = txData
+      var txData = await checkTx(txData["txhash"],60,lcd)
+      if (typeof txData == 'undefined') { 
+        txData = fcdTxData
+      }
+      }
+    }
+  }
 }
-//console.log (await  parseSingleInput(txData,lcd,walletAddress,coinLookup))
-//console.log (await parseLpOut(txData,lcd,walletAddress,coinLookup))
-//console.log (await parseLpIn(txData,lcd,walletAddress,coinLookup))//
-//console.log (await parseMultipleInputs(txData, lcd , walletAddress,coinLookup,true))
-//console.log (await parseSingleOutput(txData, lcd , walletAddress,coinLookup))
 
 
-if (txType == "tsLpAdd"){
-  return (await parseLpIn(txData,lcd,walletAddress,coinLookup))
-}
-if (txType == "tsLpRemove"){
-  return (await parseLpOut(txData,lcd,walletAddress,coinLookup))
-}
+if (exists (txData)) { 
+  var txType = await getTxType(txData,lcd)
+    if (txType == false){
+      //sometimes FCDs logs are corrupt? 
+      //not sure but this works sometimes. 
+      //var txData = await checkTx(txData["txhash"],60,lcd)
+      //var txType = await getTxType(txData,lcd)
+      //console.log (txhash)
+    }
+    
+  if (txType == false){
+    console.log (txData["txhash"])
+  }
+  //console.log (await  parseSingleInput(txData,lcd,walletAddress,coinLookup))
+  //console.log (await parseLpOut(txData,lcd,walletAddress,coinLookup))
+  //console.log (await parseLpIn(txData,lcd,walletAddress,coinLookup))//
+  //console.log (await parseMultipleInputs(txData, lcd , walletAddress,coinLookup,true))
+  //console.log (await parseSingleOutput(txData, lcd , walletAddress,coinLookup))
 
-return (await parseGenericSendReceive(txData, lcd , walletAddress,coinLookup,txType))
- 
+
+  if (txType == "tsLpAdd"){
+    return (await parseLpIn(txData,lcd,walletAddress,coinLookup))
+  }
+  if (txType == "tsLpRemove"){
+    return (await parseLpOut(txData,lcd,walletAddress,coinLookup))
+  }
+
+  return (await parseGenericSendReceive(txData, lcd , walletAddress,coinLookup,txType))
+  }else{
+    return false
+  }
 }
 
 

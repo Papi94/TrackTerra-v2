@@ -1,5 +1,5 @@
 import {checkTx,initLCD,getCW20Info } from './lcd.js'
-import {parseContractActions,parseTransfer,parseNativeRewards,parseNativeDelegation } from './events.js'
+import {parseContractActions,parseContractEvents,parseTransfer,parseNativeRewards,parseNativeDelegation } from './events.js'
 
 /*
 Transaction types
@@ -68,17 +68,25 @@ export async function getTxType(txData,lcd){
     var txType 
     if (exists (txData["logs"])){ 
     //const txData =await checkTx(txId,60000,lcd)
-    const parsedData = parseContractActions(txData["logs"][0]["events"])
-    if(exists(parsedData)) { 
-        if (isAnchorAustMint(txData)){
-            txType = "anchorMint"
-            return txType
-        }
+    var parsedData = parseContractActions(txData["logs"][0]["events"])
 
-        if (isAnchorAustRedeem(txData)){
-            txType = "anchorRedeem"
-            return txType
-        }
+
+    if (txData["txhash"] == "3BF4D86E3A92E3321E8A44751FA1837304C8BD448ADBDF530ED0E509619052CF"){
+        console.log(parseContractActions(txData["logs"][0]["events"]))
+    }
+
+
+    if (isAnchorAustMint(txData)){
+        txType = "anchorMint"
+        return txType
+    }
+
+    if (isAnchorAustRedeem(txData)){
+        txType = "anchorRedeem"
+        return txType
+    }
+  if(exists(parsedData)) { 
+
 
         if (isTsSwap(txData)){
             txType = "tsSwap"
@@ -178,7 +186,7 @@ export async function getTxType(txData,lcd){
         }
         
         
-    }
+  }
 
 
     if (isNativeDelegation(txData)){
@@ -550,11 +558,10 @@ function isAnchorAustMint(txData){
         var parsedData = parseContractActions(txData["logs"][li]["events"])
         if (exists (parsedData)){ 
 
-            if ( (exists (parsedData["deposit_stable"])) && (exists (parsedData["mint"]) ) ){
+            if ( (exists (parsedData["deposit_stable"])) ){
                 var contractAddress = parsedData["mint"][0]["contract"]
-                if (contractAddress == "terra1hzh9vpxhsk8253se0vv5jj6etdvxu3nv8z07zu"){ 
                 return true
-                }
+
             }
         }
     }
@@ -568,11 +575,9 @@ function isAnchorAustRedeem(txData){
         var parsedData = parseContractActions(txData["logs"][li]["events"])
         if (exists (parsedData)){ 
 
-            if ( (exists (parsedData["redeem_stable"])) && (exists (parsedData["burn"]) ) ){
+            if ( (exists (parsedData["redeem_stable"])) ){
                 var contractAddress = parsedData["burn"][0]["contract"]
-                if (contractAddress == "terra1hzh9vpxhsk8253se0vv5jj6etdvxu3nv8z07zu"){ 
                 return true
-                }
             }
 
         }
