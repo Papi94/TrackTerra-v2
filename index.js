@@ -1,5 +1,5 @@
 
-import {classifyTransaction,initCoinList,classifyandParseTransaction,classifyTransactionByTxHash,classifyAndParseTransactionByTxHash} from './parser/index.js'
+import {classifyTransaction,initCoinList,classifyandParseTransaction,classifyTransactionByTxHash,classifyAndParseTransactionByTxHash,parseLiquidationsAnchorApi} from './parser/index.js'
 import pkg from 'sequelize';
 import express from 'express';
 import pkgfs from 'fs';
@@ -76,7 +76,7 @@ var coinLists = {}
 await initTokenLists()
 
 
-//console.log(await parse_missing_transactions(walletAddress))
+console.log(await parse_anchor_liquidations("terra16nrajtdqzqp42r9ue4706q0390ncr39qj7fank"))
 
 //console.log (await match_missing_transactions(walletAddress))
 /*
@@ -327,7 +327,7 @@ async function parse_wallet(walletAddress, parseMissing = true){
               //output = await classifyandParseTransaction(txData,walletAddress)
               //Threads arnt really threads , this will hopefuly prevent conjestions in the processing queue from impacting website or api access. 
 
-                if ( parserThreadCount > 20 ){
+                if ( parserThreadCount > 10){
                   await sleep(1000)
                   parserThreadCount = parserThreadCount -1
                 }
@@ -384,7 +384,7 @@ async function parse_wallet(walletAddress, parseMissing = true){
     //await parse_missing_transactions(walletAddress)
     //await match_missing_transactions(walletAddress)
   }
-
+  await parse_anchor_liquidations(walletAddress)
   var index = addressParseQueue.indexOf(walletAddress);
   if (index > -1) {
     addressParseQueue.splice(index, 1);
@@ -505,7 +505,7 @@ async function match_missing_transactions(walletAddress){
 
 }
 
-async function parse_anchor_liquidations(walletAddress, blockHeight){
+async function parse_anchor_liquidations(walletAddress){
   const phin = require("phin");
   //https://fcd.terra.dev/v1/txs?account=terra1m3jg6rdylqnpwtuv6hs034n662w57qyzen6t6s&limit=500&chainId=columbus-4
 
@@ -514,20 +514,25 @@ async function parse_anchor_liquidations(walletAddress, blockHeight){
   var output
   var txType
   var txData
+  var txDesc
   var entry   
   var returnData = await phin(query_url)
   
   returnData = JSON.parse(returnData.body)
   while (exists(returnData)){
 
-    console.log (returnData)
+    //console.log (returnData)
 
     for (txData of returnData["history"]) {  
-      txhash = txData["txhash"]
+      txhash = txData["tx_hash"]
       txType = txData["tx_type"]
-      if (txType == "Liquidation"){
-      output = await classifyAndParseTransactionByTxHash(txhash,walletAddress)
-      console.log(output)
+      txDesc = txData["descriptions"][0]
+
+      if (await isTxHashUnique (txhash,walletAddress) == true){
+      //console.log(txData["descriptions"][0])
+      if ((txType == "Liquidation") && ((txDesc.indexOf("Liquidator") > -1 ) || (txDesc.indexOf("Liquidated") > -1 ))){
+      output = await parseLiquidationsAnchorApi(txData,walletAddress)
+      //console.log(output)
       if ( typeof output !== 'undefined'){
         var logLen = output.length
 
@@ -543,12 +548,13 @@ async function parse_anchor_liquidations(walletAddress, blockHeight){
               }
             }
           }
+        }
       }
 
-      if (exists (returnData["next"]) == false){
+      if ( (exists (returnData["next"]) == false) || ((returnData["next"]) == null)) {
         break
       }
-      var query_url = 'https://api.anchorprotocol.com/api/history/'+walletAddress +'?offset' + returnData["next"]
+      var query_url = 'https://api.anchorprotocol.com/api/history/'+walletAddress +'?offset=' + returnData["next"]
       returnData = await phin(query_url)
       returnData = JSON.parse(returnData.body)
 

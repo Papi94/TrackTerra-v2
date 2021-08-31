@@ -1301,7 +1301,7 @@ export function parseTxFees(txData,coinLookup){
 
 return returnVars
 }
-async function CW20Lookup (address,coinLookup,lcd){
+export async function CW20Lookup (address,coinLookup,lcd){
     var returnVar = []
     
     if (exists(coinLookup["cw20"][address])){
