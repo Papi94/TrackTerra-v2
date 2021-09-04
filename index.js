@@ -60,9 +60,19 @@ class koinlyTokenNameLookup extends Model {}
 koinlyTokenNameLookup.init({
 token_name: DataTypes.STRING,
 koinly_token_name:DataTypes.STRING
-}, { sequelize, modelName: 'transactionsdata' });
+}, { sequelize, modelName: 'koinlyTokenLookup' });
 
 await koinlyTokenNameLookup.sync();
+
+class faucetpayouts extends Model {}
+faucetpayouts.init({
+  address: DataTypes.STRING,
+  ip_address:DataTypes.STRING,
+  unix_time:DataTypes.BIGINT
+  }, { sequelize, modelName: 'faucetpayouts' });
+  
+  await faucetpayouts.sync();
+
 //TODO list the rest of terra stable coins
 const nativeTokensList =   {
   "uluna" : "LUNA", 
@@ -172,6 +182,71 @@ End Web APP
 
 */
 
+async function get_terra_ust_amount (address) {
+  const fcd_url = 'https://fcd.terra.dev/v1/bank/' + address
+  const phin = require("phin");
+
+  response = phin(fcd_url)
+
+      const returnData = JSON.parse(response.body)
+      tmp_array = returnData.balance
+
+      tmp_array.forEach(coin => {
+        if (coin.denom == 'uusd') {
+          return_amount = coin.available
+        }
+      })
+
+      return(return_amount / 1000000)
+
+}
+
+function faucet_log_entry(walletAddress,ipAddress){
+  var unixTime = Math.round(+new Date()/1000);
+  var entryObj= {
+    wallet_address : walletAddress,
+    ip_address: ipAddress,
+    unix_time:unixTime
+
+    }
+    var entry =  faucetpayouts.create(entryObj);  
+}
+
+function faucet_elgible_timebased(address,ipAddress){
+  var unix = Math.round(+new Date()/1000);
+  var days_30_seconds = 30 * 86400
+  var unix_cutoff = unix - days_30_seconds
+  var response = await transactionData.findOne({
+    where: {
+        wallet_address:address,
+        unix_time:{
+          [Op.gte]: unix_cutoff 
+        }
+      }
+    });
+  
+    
+    if (response != null){ 
+      return false
+    }
+
+    var response = await transactionData.findOne({
+      where: {
+          ip_address:ipAddress,
+          unix_time:{
+            [Op.gte]: unix_cutoff 
+          }
+        }
+      });
+    
+      
+      if (response != null){ 
+        return false
+      }
+
+      return true
+    
+}
 
 async function return_transaction_count(walletAddress){
  
