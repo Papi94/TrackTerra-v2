@@ -41,121 +41,132 @@ export async function parseLiquidationsAnchorApi(txData,walletAddress){
   var timestampString =tmpTimestamp[0] + " " + tmpTimestamp[1].replace("Z","") + " UTC"
   var blockHeight = lcdTxData["height"]
 
+console.log (lcdTxData["txhash"])
 
   if (exists (lcdTxData) ) { 
-    if (exists (lcdTxData["logs"])){
-      var parsedData = parseContractActions(lcdTxData["logs"][0]["events"])
+    if (exists (lcdTxData["logs"] == true)){
 
-  var liquidatedAssetAmount =  (parsedData["execute_bid"][0]["collateral_amount"] / 1000000)
-  var liquidatedAssetToken = parsedData["execute_bid"][0]["collateral_token"] 
-  var liquidatedAssetName = await CW20Lookup(liquidatedAssetToken,coinLookup,lcd)
-  var liquidatedAssetName = liquidatedAssetName["symbol"]
-  var repaidAmount = (parsedData["repay_stable"][0]["repay_amount"] / 1000000)
-  var borrower = parsedData["liquidate_collateral"][0]["borrower"]
-  var liquidator = parsedData["liquidate_collateral"][0]["liquidator"]
-  if ((txType == "Liquidation") && (txDesc.indexOf("Liquidator") > -1 ) ){
-//if wallet is being liquidated return swap entry and colateral repay transactionm
+      var logLen = lcdTxData["logs"].length
 
-  var txFriendlyDescription = "Collateral liquidated" +" received " + repaidAmount  + "UST for" + liquidatedAssetAmount + " " +liquidatedAssetName + " Liquidator : "+ liquidator
-  var txType = "AnchorLiquidated"
-  var returnVar= {
-    wallet_address : walletAddress,
-    transaction_timestamp: lcdTxData["timestamp"],
-    transaction_timestamp_string:timestampString,
-    transaction_from: "",
-    transaction_to: "",
-    memo: "",
-    amount_received: repaidAmount,
-    amount_sent: liquidatedAssetAmount ,
-    contract_address: "",
-    sent_currency:liquidatedAssetName ,
-    received_currency: "UST",
-    net_worth_amount: "",
-    net_worth_currency: "",
-    fee_amount:txFee["fee_amount"] ,
-    fee_currency: txFee["fee_currency"],
-    token_sent_address: liquidatedAssetToken,
-    token_received_address: "uusd",
-    transaction_type:txType,
-    koinly_label: "swap",
-    friendly_description : txFriendlyDescription,
-    txhash: txhash,
-    block_height : blockHeight 
-    
-    
-    }
-    returnVars.push(returnVar)
+      for (let li = 0; li < logLen; li = li + 1) {
 
-    var txFriendlyDescription = "Repaid " + repaidAmount  + "UST towards Anchor loan (liquidated)"
-    var returnVar= {
-      wallet_address : walletAddress,
-      transaction_timestamp: lcdTxData["timestamp"],
-      transaction_timestamp_string:timestampString,
-      transaction_from: "",
-      transaction_to: "",
-      memo: "",
-      amount_received: "" ,
-      amount_sent: repaidAmount ,
-      contract_address: "",
-      sent_currency:"UST" ,
-      received_currency: "",
-      net_worth_amount: "",
-      net_worth_currency: "",
-      fee_amount:"" ,
-      fee_currency: "",
-      token_sent_address: "uusd",
-      token_received_address: "",
-      transaction_type:txType,
-      koinly_label: "anchorRepay",
-      friendly_description : txFriendlyDescription,
-      txhash: txhash,
-      block_height : blockHeight 
-      
-      
+        if (exists (lcdTxData["logs"][li]) == true){
+          var parsedData = parseContractActions(lcdTxData["logs"][0]["events"])
+
+          if (exists (parsedData["execute_bid"])) {
+            var liquidatedAssetAmount =  (parsedData["execute_bid"][0]["collateral_amount"] / 1000000)
+            var liquidatedAssetToken = parsedData["execute_bid"][0]["collateral_token"] 
+            var liquidatedAssetName = await CW20Lookup(liquidatedAssetToken,coinLookup,lcd)
+            var liquidatedAssetName = liquidatedAssetName["symbol"]
+            var repaidAmount = (parsedData["repay_stable"][0]["repay_amount"] / 1000000)
+            var borrower = parsedData["liquidate_collateral"][0]["borrower"]
+            var liquidator = parsedData["liquidate_collateral"][0]["liquidator"]
+
+            if ((txType == "Liquidation") && (txDesc.indexOf("Liquidator") > -1 ) ){
+          //if wallet is being liquidated return swap entry and colateral repay transactionm
+
+              var txFriendlyDescription = "Collateral liquidated" +" received " + repaidAmount  + "UST for" + liquidatedAssetAmount + " " +liquidatedAssetName + " Liquidator : "+ liquidator
+              var txType = "AnchorLiquidated"
+              var returnVar= {
+                wallet_address : walletAddress,
+                transaction_timestamp: lcdTxData["timestamp"],
+                transaction_timestamp_string:timestampString,
+                transaction_from: "",
+                transaction_to: "",
+                memo: "",
+                amount_received: repaidAmount,
+                amount_sent: liquidatedAssetAmount ,
+                contract_address: "",
+                sent_currency:liquidatedAssetName ,
+                received_currency: "UST",
+                net_worth_amount: "",
+                net_worth_currency: "",
+                fee_amount:txFee["fee_amount"] ,
+                fee_currency: txFee["fee_currency"],
+                token_sent_address: liquidatedAssetToken,
+                token_received_address: "uusd",
+                transaction_type:txType,
+                koinly_label: "swap",
+                friendly_description : txFriendlyDescription,
+                txhash: txhash,
+                block_height : blockHeight 
+                
+                
+                }
+                returnVars.push(returnVar)
+
+                var txFriendlyDescription = "Repaid " + repaidAmount  + "UST towards Anchor loan (liquidated)"
+                var returnVar= {
+                  wallet_address : walletAddress,
+                  transaction_timestamp: lcdTxData["timestamp"],
+                  transaction_timestamp_string:timestampString,
+                  transaction_from: "",
+                  transaction_to: "",
+                  memo: "",
+                  amount_received: "" ,
+                  amount_sent: repaidAmount ,
+                  contract_address: "",
+                  sent_currency:"UST" ,
+                  received_currency: "",
+                  net_worth_amount: "",
+                  net_worth_currency: "",
+                  fee_amount:"" ,
+                  fee_currency: "",
+                  token_sent_address: "uusd",
+                  token_received_address: "",
+                  transaction_type:txType,
+                  koinly_label: "anchorRepay",
+                  friendly_description : txFriendlyDescription,
+                  txhash: txhash,
+                  block_height : blockHeight 
+                  
+                  
+                  }
+
+                  returnVars.push(returnVar)
+              }
+
+              if ((txType == "Liquidation") && (txDesc.indexOf("Liquidated") > -1 )){
+              //if wallet is liquidator then return swap transactions
+
+                  var txType = "AnchorLiquidation"
+                  var txFriendlyDescription = "Liquidated " + parsedData["repay_stable"][0]["borrower"] + " received " + liquidatedAssetAmount + " " + liquidatedAssetName + " for " + repaidAmount + " UST. "
+
+
+                var returnVar= {
+                  wallet_address : walletAddress,
+                  transaction_timestamp: lcdTxData["timestamp"],
+                  transaction_timestamp_string:timestampString,
+                  transaction_from: "",
+                  transaction_to: "",
+                  memo: "",
+                  amount_received: liquidatedAssetAmount,
+                  amount_sent: repaidAmount ,
+                  contract_address: "",
+                  sent_currency: "UST",
+                  received_currency: liquidatedAssetName,
+                  net_worth_amount: "",
+                  net_worth_currency: "",
+                  fee_amount:txFee["fee_amount"] ,
+                  fee_currency: txFee["fee_currency"],
+                  token_sent_address: "uusd",
+                  token_received_address: liquidatedAssetToken,
+                  transaction_type:txType,
+                  koinly_label: "swap",
+                  friendly_description : txFriendlyDescription,
+                  txhash: txhash,
+                  block_height : blockHeight 
+                  
+                  
+                    }
+                  returnVars.push(returnVar)
+
+              }
+            }
+          }
       }
-
-      returnVars.push(returnVar)
-  }
-
-  if ((txType == "Liquidation") && (txDesc.indexOf("Liquidated") > -1 )){
-  //if wallet is liquidator then return swap transactions
-
-      var txType = "AnchorLiquidation"
-      var txFriendlyDescription = "Liquidated " + parsedData["repay_stable"][0]["borrower"] + " received " + liquidatedAssetAmount + " " + liquidatedAssetName + " for " + repaidAmount + " UST. "
-
-
-    var returnVar= {
-      wallet_address : walletAddress,
-      transaction_timestamp: lcdTxData["timestamp"],
-      transaction_timestamp_string:timestampString,
-      transaction_from: "",
-      transaction_to: "",
-      memo: "",
-      amount_received: liquidatedAssetAmount,
-      amount_sent: repaidAmount ,
-      contract_address: "",
-      sent_currency: "UST",
-      received_currency: liquidatedAssetName,
-      net_worth_amount: "",
-      net_worth_currency: "",
-      fee_amount:txFee["fee_amount"] ,
-      fee_currency: txFee["fee_currency"],
-      token_sent_address: "uusd",
-      token_received_address: liquidatedAssetToken,
-      transaction_type:txType,
-      koinly_label: "swap",
-      friendly_description : txFriendlyDescription,
-      txhash: txhash,
-      block_height : blockHeight 
-      
-      
-      }
-      returnVars.push(returnVar)
-
     }
   }
-}
-
 
 
 

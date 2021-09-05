@@ -63,7 +63,7 @@ koinly_token_name:DataTypes.STRING
 }, { sequelize, modelName: 'koinlyTokenLookup' });
 
 await koinlyTokenNameLookup.sync();
-
+/*
 class faucetpayouts extends Model {}
 faucetpayouts.init({
   address: DataTypes.STRING,
@@ -72,6 +72,7 @@ faucetpayouts.init({
   }, { sequelize, modelName: 'faucetpayouts' });
   
   await faucetpayouts.sync();
+*/
 
 //TODO list the rest of terra stable coins
 const nativeTokensList =   {
@@ -182,7 +183,8 @@ End Web APP
 
 */
 
-async function get_terra_ust_amount (address) {
+/* Faucet functions, may not be needed
+async function get_terra_ust_balance (address) {
   const fcd_url = 'https://fcd.terra.dev/v1/bank/' + address
   const phin = require("phin");
 
@@ -212,13 +214,13 @@ function faucet_log_entry(walletAddress,ipAddress){
     var entry =  faucetpayouts.create(entryObj);  
 }
 
-function faucet_elgible_timebased(address,ipAddress){
+function faucet_elgible(walletAddress,ipAddress){
   var unix = Math.round(+new Date()/1000);
   var days_30_seconds = 30 * 86400
   var unix_cutoff = unix - days_30_seconds
   var response = await transactionData.findOne({
     where: {
-        wallet_address:address,
+        wallet_address:walletAddress,
         unix_time:{
           [Op.gte]: unix_cutoff 
         }
@@ -247,7 +249,7 @@ function faucet_elgible_timebased(address,ipAddress){
       return true
     
 }
-
+*/
 async function return_transaction_count(walletAddress){
  
   var returnDatas = []
