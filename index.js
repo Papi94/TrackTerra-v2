@@ -7,7 +7,9 @@ import { request, gql } from 'graphql-request'
 const { fs} = pkgfs
 const { Sequelize, Model, DataTypes,  QueryTypes } = pkg;
 const app = new express;
-
+import { createRequire } from "module";
+const require = createRequire(import.meta.url);
+const rateLimit = require("express-rate-limit");
 const addressParseQueue = []
 var parserThreadCount = 0 
 /*const sequelize = new Sequelize('sqlite:database.db', {
@@ -18,14 +20,25 @@ var parserThreadCount = 0
 });
 
 */
+
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 5, // limit each IP to 100 requests per windowMs
+  message:
+    "You have been rate limited for 15 minutes."
+});
+
+//  apply to all requests
+app.use("/parseWallet", limiter);
+
+
 const sequelize = new Sequelize('postgres://postgres:terraluna@localhost:5432/trackterra', {
   
   // disable logging; default: console.log
   logging: false
 
 });
-import { createRequire } from "module";
-const require = createRequire(import.meta.url);
+
 
 class transactionData extends Model {}
 transactionData.init({
@@ -171,7 +184,7 @@ app.get('/countTxs', async function (req, res) {
   
 })
 
-var server = app.listen(8081, function () {
+var server = app.listen(80, function () {
   var host = server.address().address
   var port = server.address().port
   console.log("Track Terra listening at http://%s:%s", host, port)
@@ -343,7 +356,7 @@ async function validate_wallet(walletAddress){
   const phin = require("phin");
   //https://fcd.terra.dev/v1/txs?account=terra1m3jg6rdylqnpwtuv6hs034n662w57qyzen6t6s&limit=500&chainId=columbus-4
 
-  var query_url = 'https://fcd.terra.dev/v1/txs?account='+walletAddress+'&chainId=columbus-4&limit=500'
+  var query_url = 'https://fcd.terra.dev/v1/txs?account='+walletAddress+'&chainId=columbus-4&limit=100'
   var txhash
   var txType 
   var returnData = await phin(query_url)
@@ -368,7 +381,7 @@ async function validate_wallet(walletAddress){
           break
         }
 
-      var query_url = 'https://fcd.terra.dev/v1/txs?offset='+ returnData["next"] +'&account='+walletAddress+'&chainId=columbus-4&limit=500'
+      var query_url = 'https://fcd.terra.dev/v1/txs?offset='+ returnData["next"] +'&account='+walletAddress+'&chainId=columbus-4&limit=100'
       returnData = await phin(query_url)
       returnData = JSON.parse(returnData.body)
       
@@ -384,7 +397,7 @@ async function parse_wallet(walletAddress, parseMissing = true){
   const phin = require("phin");
     //https://fcd.terra.dev/v1/txs?account=terra1m3jg6rdylqnpwtuv6hs034n662w57qyzen6t6s&limit=500&chainId=columbus-4
   
-  var query_url = 'https://fcd.terra.dev/v1/txs?account='+walletAddress+'&chainId=columbus-4&limit=500'
+  var query_url = 'https://fcd.terra.dev/v1/txs?account='+walletAddress+'&chainId=columbus-4&limit=100'
   var txhash
   var earlyExit = false
   var entry   
@@ -448,7 +461,7 @@ async function parse_wallet(walletAddress, parseMissing = true){
           break
         }
 
-      var query_url = 'https://fcd.terra.dev/v1/txs?offset='+ returnData["next"] +'&account='+walletAddress+'&chainId=columbus-4&limit=500'
+      var query_url = 'https://fcd.terra.dev/v1/txs?offset='+ returnData["next"] +'&account='+walletAddress+'&chainId=columbus-4&limit=100'
       returnData = await phin(query_url)
       returnData = JSON.parse(returnData.body)
 
