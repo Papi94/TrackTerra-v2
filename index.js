@@ -76,16 +76,7 @@ koinly_token_name:DataTypes.STRING
 }, { sequelize, modelName: 'koinlyTokenLookup' });
 
 await koinlyTokenNameLookup.sync();
-/*
-class faucetpayouts extends Model {}
-faucetpayouts.init({
-  address: DataTypes.STRING,
-  ip_address:DataTypes.STRING,
-  unix_time:DataTypes.BIGINT
-  }, { sequelize, modelName: 'faucetpayouts' });
-  
-  await faucetpayouts.sync();
-*/
+
 
 //TODO list the rest of terra stable coins
 const nativeTokensList =   {
