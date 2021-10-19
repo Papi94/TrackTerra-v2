@@ -5,7 +5,10 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "dev": "cross-env NODE_ENV=development nodemon index.js",
+    "dev": "npm run development",
+    "development": "cross-env NODE_ENV=development node ./index.js",
+    "prod": "npm run production",
+    "production": "cross-env NODE_ENV=production node ./index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",

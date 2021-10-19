@@ -6,7 +6,7 @@ dotenv.config({ path: path.join(path.dirname('../'), '.env') })
 
 const envStruct = Joi.object()
   .keys({
-    NODE_ENV: Joi.string().valid('production', 'local', 'test').required(),
+    NODE_ENV: Joi.string().valid('production', 'development', 'test').required(),
     PORT: Joi.number().default(3000),
     DB_CONNECTION: Joi.string().required().description('DB Connection '),
     DB_HOST: Joi.string().required().description('DB Host '),
