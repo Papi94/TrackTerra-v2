@@ -4,6 +4,7 @@ import pkg from 'sequelize';
 import express from 'express';
 import pkgfs from 'fs';
 import { request, gql } from 'graphql-request'
+import { config } from './config/config.js'
 const { fs} = pkgfs
 const { Sequelize, Model, DataTypes,  QueryTypes } = pkg;
 const app = new express;
@@ -12,6 +13,7 @@ const require = createRequire(import.meta.url);
 const rateLimit = require("express-rate-limit");
 const addressParseQueue = []
 var parserThreadCount = 0 
+
 /*const sequelize = new Sequelize('sqlite:database.db', {
   
   // disable logging; default: console.log
@@ -31,13 +33,7 @@ const limiter = rateLimit({
 //  apply to all requests
 app.use("/parseWallet", limiter);
 
-
-const sequelize = new Sequelize('postgres://postgres:terraluna@localhost:5432/trackterra', {
-  
-  // disable logging; default: console.log
-  logging: false
-
-});
+const sequelize = new Sequelize(config.dbConnection.url, config.dbConnection.options);
 
 
 class transactionData extends Model {}
@@ -144,9 +140,7 @@ var response = await validate_wallet(walletAddress)
   
 })
 
-
 app.use('/', express.static('html'))
-
 
 app.get('/getTaxReport', async function (req, res) {
   
@@ -175,7 +169,7 @@ app.get('/countTxs', async function (req, res) {
   
 })
 
-var server = app.listen(80, function () {
+var server = app.listen(config.port, function () {
   var host = server.address().address
   var port = server.address().port
   console.log("Track Terra listening at http://%s:%s", host, port)

@@ -109,7 +109,7 @@
 	}
 
 	async function parseWalletAllDataReport(walletAddress){
-		var baseUrl = "http://localhost:8081/"
+		var baseUrl = "/"
 		var walletAddress = document.getElementById("address").value;
 		var submitUrl = baseUrl +"parseWallet?address="+ walletAddress
 		var statusUrl = baseUrl +"parseStatus?address="+ walletAddress
@@ -171,7 +171,7 @@
 	
 
 	async function parseWalletTaxReport(walletAddress){
-		var baseUrl = "http://localhost:8081/"
+		var baseUrl = "/"
 		var walletAddress = document.getElementById("address").value;
 		var submitUrl = baseUrl +"parseWallet?address="+ walletAddress
 		var statusUrl = baseUrl +"parseStatus?address="+ walletAddress
