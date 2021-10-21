@@ -1,3 +1,4 @@
+import phin from 'phin';
 import {checkTx,initLCD,getCW20Info, sleep } from './parserlib/lcd.js'
 
 import {parseContractActions,parseTransfer,findAttributes,parseExecuteContracts,parseContractEvents,parseNativeRewards,parseNativeDelegation } from './parserlib/events.js'
@@ -32,7 +33,13 @@ export async function parseLiquidationsAnchorApi(txData,walletAddress){
   var txDesc = txData["descriptions"][0]
   var txTimestamp = txData["timestamp"]
   var returnVars = []
-  var lcdTxData = await checkTx(txhash,60,lcd)
+  
+   var lcdTxDataRes = await phin({
+      url: 'https://fcd.terra.dev/v1/tx/' + txhash,
+      parse: 'json',
+  })
+  var lcdTxData = lcdTxDataRes.body
+  
   var txFees = parseTxFees(lcdTxData,coinLookup["native"])
   var txFee = txFees[0]
   
