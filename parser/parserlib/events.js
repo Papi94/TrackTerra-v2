@@ -158,7 +158,7 @@ export function parseNativeRewards(events) {
   export function parseNativeDelegation(events) {
     const attributes = findAttributes(events, 'delegate')
     if (!attributes) {
-      return false
+      return []
     }
   
     const returnResults = []
