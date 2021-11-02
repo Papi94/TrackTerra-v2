@@ -1,13 +1,9 @@
-# Proposal: Funding for TrackTerra
-
-
 ## PROJECT INTRODUCTION
 As you might already know TrackTerra is a tax and reporting application. It is build to ease the process of transforming the blocks/transactions data into a single transaction form similar to traditional banking systems. It currently supports native send/recieve, anchor, mirror(partially), pylon(partialy) protocols. 
 
 ## PROPOSAL
-This proposal is to further develop the application in order 
+This proposal is to further develop the application in order to
 - Add support for more protocols
-- Redesign ui
 - Add support for different taxing software when exporting the data
 - Add support for REST and GraphQL to query the applcation(Limited)
 
@@ -22,10 +18,8 @@ Est. Duration: 10 days
 Funding: $5,600
 ### **Add support for tax software(Max: 2)**
 Est. Duration: 5 days
-Funding: $2,800
+Funding: $3,200
 ### **Add support for REST and GraphQL**
-Est. Duration: 10 days
-Funding: $5,600
-### **Redesign UI**
-Est. Duration: 10 days
-Funding: $5,600
+Est. Duration: 5 days
+Funding: $3,200
+
