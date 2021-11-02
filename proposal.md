@@ -10,7 +10,7 @@ This proposal is to further develop the application in order to
 The major activities include redesiging the core functionality of the system which is the indexer to support the addition of new protocols dynamically.
 
 ## DEVELOPMENT ROADMAP
-### **Add support for more protocols**
+### **Add support for more protocols(Dynamically adding new protocols)**
 Est. Duration: 30 days
 Funding: $16,800
 ### **Add support for dynamically adding new protocols**
